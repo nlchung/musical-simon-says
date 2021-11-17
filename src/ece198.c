@@ -306,3 +306,29 @@ uint16_t ReadADC(ADC_HandleTypeDef* adc, uint32_t channel)  // channel might be 
     return res;
 }
 
+void SetLight1 (int duration, int color) {
+    // bottom three bits indicate which of the three LEDs should be on (eight possible combinations)
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, color & 0x01);  // blue  (hex 1 == 0001 binary)
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, color & 0x02);  // green (hex 2 == 0010 binary)
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, color & 0x04);  // red   (hex 4 == 0100 binary)
+
+    HAL_Delay(duration);
+    color = 0;
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, color & 0x01);  // blue  (hex 1 == 0001 binary)
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, color & 0x02);  // green (hex 2 == 0010 binary)
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, color & 0x04);  // red   (hex 4 == 0100 binary)
+}
+
+
+void SetLight2 (int duration, int color) {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, color & 0x01);  // blue  (hex 1 == 0001 binary)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, color & 0x02);  // green (hex 2 == 0010 binary)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, color & 0x04);  // red   (hex 4 == 0100 binary)
+
+    HAL_Delay(duration);
+    color = 0;
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, color & 0x01);  // blue  (hex 1 == 0001 binary)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, color & 0x02);  // green (hex 2 == 0010 binary)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, color & 0x04);  // red   (hex 4 == 0100 binary)
+}
+

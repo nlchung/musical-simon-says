@@ -8,7 +8,7 @@
 // To run a particular example, you should remove the comment (//) in
 // front of exactly ONE of the following lines:
 
-#define BUTTON_BLINK
+// #define BUTTON_BLINK
 // #define LIGHT_SCHEDULER
 // #define TIME_RAND
 // #define KEYPAD
@@ -39,7 +39,9 @@ int main(void)
 
     // initialize the pins to be input, output, alternate function, etc...
 
-    InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
+    InitializePin(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED output pins
+    InitializePin(GPIOB, GPIO_PIN_5 | GPIO_PIN_4 | GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED output pins
+    InitializePin(GPIOB, GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
 
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
     // is required, since there's one on the board)
@@ -51,6 +53,19 @@ int main(void)
 
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
+    for (int i = 0; i < 10; ++i) {
+        SetLight1(100, 0x02);
+        SetLight2(100, 0x04);
+        SetLight1(100, 0x04);
+        SetLight2(100, 0x02);
+        SetLight1(100, 0x02);
+        SetLight2(100, 0x04);
+    }
+    SetLight1(100, 0x00);
+    SetLight2(100, 0x00);
+
+
+    //The starter code for PWM can help you with this -- just set the duty cycle to be half the period, and set the period to produce a sound of the pitch you want.
 
 #ifdef BUTTON_BLINK
     // Wait for the user to push the blue button, then blink the LED.
@@ -239,14 +254,14 @@ int main(void)
 
 #ifdef PWM
     // Use Pulse Width Modulation to fade the LED in and out.
-    uint16_t period = 100, prescale = 16;
+    uint16_t period = 255, prescale = 16;
 
     __TIM2_CLK_ENABLE();  // enable timer 2
     TIM_HandleTypeDef pwmTimerInstance;  // this variable stores an instance of the timer
     InitializePWMTimer(&pwmTimerInstance, TIM2, period, prescale);   // initialize the timer instance
     InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_1);          // initialize one channel (can use others for motors, etc)
 
-    InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2); // connect the LED to the timer output
+    InitializePin(GPIOA, GPIO_PIN_8, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2); // connect the LED to the timer output
 
     while (true)
     {

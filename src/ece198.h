@@ -31,3 +31,7 @@ void Display7Segment(int digit);
 
 void InitializeADC(ADC_HandleTypeDef* adc, ADC_TypeDef* whichAdc);
 uint16_t ReadADC(ADC_HandleTypeDef* adc, uint32_t channel);
+
+
+void SetLight1 (int duration, int color);
+void SetLight2 (int duration, int color);
