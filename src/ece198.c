@@ -332,3 +332,16 @@ void SetLight2 (int duration, int color) {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, color & 0x04);  // red   (hex 4 == 0100 binary)
 }
 
+void PlaySound (int Delay, uint16_t period, uint16_t prescale) {
+    __TIM1_CLK_ENABLE();    // enable timer 2
+    //instance1 is Pin A0: Timer 2, channel 1.
+    TIM_HandleTypeDef pwmTimerInstance1;    // this variable stores an instance of the timer
+    InitializePWMTimer(&pwmTimerInstance1, TIM1, period, prescale);   // initialize the timer instance
+    InitializePWMChannel(&pwmTimerInstance1, TIM_CHANNEL_2);            // initialize one channel (can use others for motors, etc)
+
+    InitializePin(GPIOA, GPIO_PIN_9, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM1); // connect the buzzer to the timer output
+
+    SetPWMDutyCycle(&pwmTimerInstance1, TIM_CHANNEL_2, period/2);
+    HAL_Delay(2000);
+    SetPWMDutyCycle(&pwmTimerInstance1, TIM_CHANNEL_2, 0);
+}

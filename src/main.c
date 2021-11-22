@@ -18,7 +18,7 @@
 // #define COLOR_LED
 // #define ROTARY_ENCODER
 // #define ANALOG
-#define PWM
+// #define PWM
 
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
@@ -54,6 +54,7 @@ int main(void)
     // (depending on which of the #define statements at the top of this file has been uncommented)
     SetLight1(500, 0x07);
     SetLight2(500, 0x07);
+    PlaySound(2000,1318, 16);
 
 
     //The starter code for PWM can help you with this -- just set the duty cycle to be half the period, and set the period to produce a sound of the pitch you want.
@@ -245,8 +246,8 @@ int main(void)
 
 #ifdef PWM
     // Use Pulse Width Modulation
-    // uint16_t periodA4 = 880, prescaleA4 = 16;
-    // uint16_t periodC5 = 1046, prescaleC5 = 16;
+    uint16_t periodA4 = 880, prescaleA4 = 16;
+    uint16_t periodC5 = 1046, prescaleC5 = 16;
     uint16_t periodE5 = 1318, prescaleE5 = 16;
 
     __TIM1_CLK_ENABLE();    // enable timer 2
