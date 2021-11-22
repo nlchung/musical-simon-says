@@ -35,3 +35,4 @@ uint16_t ReadADC(ADC_HandleTypeDef* adc, uint32_t channel);
 
 void SetLight1 (int duration, int color);
 void SetLight2 (int duration, int color);
+void PlaySound (int duration, uint16_t period, uint16_t prescale);

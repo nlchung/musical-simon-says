@@ -18,7 +18,7 @@
 // #define COLOR_LED
 // #define ROTARY_ENCODER
 // #define ANALOG
-#define PWM
+// #define PWM
 
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
@@ -41,7 +41,7 @@ int main(void)
 
     InitializePin(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED output pins
     InitializePin(GPIOB, GPIO_PIN_6 | GPIO_PIN_10 | GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED output pins
-
+    InitializePin(GPIOA, GPIO_PIN_10, GPIO_MODE_INPUT, GPIO_PULLDOWN, 0);
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
     // is required, since there's one on the board)
 
@@ -52,10 +52,11 @@ int main(void)
 
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
-    SetLight1(500, 0x07);
-    SetLight2(500, 0x07);
 
-
+    SetLight1(500, 0x02);
+    SetLight2(500, 0x04);
+    PlaySound(2000, 1318, 16);
+    // Button1();
     //The starter code for PWM can help you with this -- just set the duty cycle to be half the period, and set the period to produce a sound of the pitch you want.
 
 #ifdef BUTTON_BLINK
