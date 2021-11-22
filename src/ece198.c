@@ -321,14 +321,14 @@ void SetLight1 (int duration, int color) {
 
 
 void SetLight2 (int duration, int color) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, color & 0x01);  // blue  (hex 1 == 0001 binary)
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, color & 0x02);  // green (hex 2 == 0010 binary)
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, color & 0x04);  // red   (hex 4 == 0100 binary)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, color & 0x01);  // blue  (hex 1 == 0001 binary)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, color & 0x02);  // green (hex 2 == 0010 binary)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, color & 0x04);  // red   (hex 4 == 0100 binary)
 
     HAL_Delay(duration);
     color = 0;
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, color & 0x01);  // blue  (hex 1 == 0001 binary)
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, color & 0x02);  // green (hex 2 == 0010 binary)
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, color & 0x04);  // red   (hex 4 == 0100 binary)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, color & 0x01);  // blue  (hex 1 == 0001 binary)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, color & 0x02);  // green (hex 2 == 0010 binary)
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, color & 0x04);  // red   (hex 4 == 0100 binary)
 }
 
