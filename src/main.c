@@ -36,43 +36,143 @@ int main(void)
     __HAL_RCC_GPIOA_CLK_ENABLE(); // enable port A (for the on-board LED, for example)
     __HAL_RCC_GPIOB_CLK_ENABLE(); // enable port B (for the rotary encoder inputs, for example)
     __HAL_RCC_GPIOC_CLK_ENABLE(); // enable port C (for the on-board blue pushbutton, for example)
-
-    // initialize the pins to be input, output, alternate function, etc...
-
-    InitializePin(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED output pins
-    InitializePin(GPIOB, GPIO_PIN_6 | GPIO_PIN_10 | GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED output pins
-    InitializePin(GPIOA, GPIO_PIN_10, GPIO_MODE_INPUT, GPIO_PULLUP, 0);
-    // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
-    // is required, since there's one on the board)
+    InitializePin(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED 1
+    InitializePin(GPIOB, GPIO_PIN_6 | GPIO_PIN_10 | GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED 2
+    // InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_INPUT, GPIO_PULLUP, 0); // button 2
+    // InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_INPUT, GPIO_PULLUP, 0); // button 3
 
     // set up for serial communication to the host computer
     // (anything we write to the serial port will appear in the terminal (i.e. serial monitor) in VSCode)
-
     SerialSetup(9600);
+
+
+
+
+
+
+
+    // BUTTON CODE: NOT WORKING
+
+    // InitializePin(GPIOA, GPIO_PIN_10, GPIO_MODE_INPUT, GPIO_PULLUP, 0); // button 1
+
+    // while (true) {
+    //     if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10) == 0) {
+    //             SetLight1(0x04);
+    //             SetLight2(0x07);
+    //             SetLight1(0x00);
+    //             SetLight2(0x00);
+    //     }
+    // }
+
+
+    // while (true) {
+    //     if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 0) {
+    //             SetLight1(0x04);
+    //             SetLight2(0x07);
+    //             SetLight1(0x00);
+    //             SetLight2(0x00);
+    //     }
+    // }
+
+
+
+
+
+
+
+    // HARDCODED GAME
 
     // 2x frequency of each note (AKA period for PWM)
     int noteA = 880;
     int noteC = 1046;
     int noteE = 660;
 
-    int listOfNotes[7];
+    uint16_t maxLevel = 7;
+    int listOfNotes[maxLevel];
+    listOfNotes[0] = noteA;
+    listOfNotes[1] = noteA;
+    listOfNotes[2] = noteA;
+    listOfNotes[3] = noteA;
+    listOfNotes[4] = noteA;
+    listOfNotes[5] = noteA;
+    listOfNotes[6] = noteA;
 
+    uint16_t level = 1;
+    while (level <= 7) {
+        // Start of Pattern Output
+        SetLight1(0x07);
+        for (uint16_t k = 0; k < level; k++) {
+            if (listOfNotes[k] == noteA) {
+                SetLight2(0x04);
+                PlaySound(noteA);
+            }
+            else if (listOfNotes[k] == noteC) {
+                SetLight2(0x02);
+                PlaySound(noteC);
+            }
+            else if (listOfNotes[k] == noteE) {
+                SetLight2(0x01);
+                PlaySound(noteE);
+            }
+        }
+        SetLight1(0x00);
+        SetLight2(0x00);
+        // End of Pattern Output
+
+
+        // New array to hold user input
+        int UserInput[level];                   // number of indices == current level number
+        bool levelPassed = true;                // bool to track if user passed the level
+
+
+        // Start of User Input
+        for (uint16_t m = 0; m < level; m++) {
+            //  Wait for User Input
+            while(true) {
+                if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 0) {
+                    SetLight2(0x04);
+                    PlaySound(noteA);
+                    SetLight2(0x00);
+                    UserInput[m] = noteA;
+                    break;
+                }
+            }
+            if (UserInput[m] != listOfNotes[m]) {
+                levelPassed = false;
+            }
+        }
+        if (levelPassed == true) {
+            SerialPuts("Level passed!");
+            ++level;
+        }
+    }
+
+
+
+
+
+
+    // CODE FOR RANDOMIZING LIST INPUTS
 
     // while (1) {
     //     for (int i = 0 ; i < 7 ; i++){
-    //     int num = (int) (rand() % 4) + 1;
-    //     if (num == 1) {
-    //         listOfNotes[i] = noteA;
-    //     }
-    //     else if (num == 2) {
-    //         listOfNotes[i] = noteC;
-    //     }
-    //     else if (num == 3) {
-    //         listOfNotes[i] = noteE;
+    //         int num = (int) (rand() % 4) + 1;
+    //         if (num == 1) {
+    //             listOfNotes[i] = noteA;
+    //         }
+    //         else if (num == 2) {
+    //             listOfNotes[i] = noteC;
+    //         }
+    //         else if (num == 3) {
+    //             listOfNotes[i] = noteE;
+    //         }
     //     }
     // }
 
+    // SerialPutc(listOfNotes[0]);
 
+
+    // SAMPLE CODE OF RANDOM TIME GENERATOR 
 
     // while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));  // wait for button press
 
@@ -86,45 +186,6 @@ int main(void)
     // SerialPuts(buff); // transmit the buffer to the host computer's serial monitor in VSCode/PlatformIO
 
     // while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));  // wait for button to be released
-
-
-
-    // while (true) {
-    //     if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 0) {
-    //             SetLight1(0x04);
-    //             SetLight2(0x07);
-    //             PlaySound(618);
-    //             SetLight1(0x00);
-    //             SetLight2(0x00);
-    //     }
-    // }
-
-
-
-
-
-    // Start of Pattern Output
-    SetLight1(0x07);
-
-    // A
-    SetLight2(0x04);
-    PlaySound(noteA);
-
-    // C
-    SetLight2(0x02);
-    PlaySound(noteC);
-
-    // A
-    SetLight2(0x04);
-    PlaySound(noteA);
-
-    // E
-    SetLight2(0x01);
-    PlaySound(noteE);
-
-    // End of Pattern Output
-    SetLight1(0x00);
-    SetLight2(0x00);
 
 
 
