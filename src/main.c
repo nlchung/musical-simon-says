@@ -50,25 +50,45 @@ int main(void)
 
     SerialSetup(9600);
 
-    // as mentioned above, only one of the following code sections will be used
-    // (depending on which of the #define statements at the top of this file has been uncommented)
-    // int notes[7]{};
-    // srand(time(NULL));
-    // for (int i = 0 ; i < 7 ; i++){
-    //     notes[i] = (int) (rand() % 4) + 1;
+    // 2x frequency of each note (AKA period for PWM)
+    int noteA = 880;
+    int noteC = 1046;
+    int noteE = 660;
+
+    int listOfNotes[7];
+
+
+    // while (1) {
+    //     for (int i = 0 ; i < 7 ; i++){
+    //     int num = (int) (rand() % 4) + 1;
+    //     if (num == 1) {
+    //         listOfNotes[i] = noteA;
+    //     }
+    //     else if (num == 2) {
+    //         listOfNotes[i] = noteC;
+    //     }
+    //     else if (num == 3) {
+    //         listOfNotes[i] = noteE;
+    //     }
     // }
 
-    // SetLight1(500, 0x02);
-    // SetLight2(500, 0x04);
-    // // PlaySound(2000, 1318, 16);
-    // while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
-    // {
-    // }
-    // while (1) {
-    //     SetLight1(500, 0x01);
-    //     PlaySound(500, 1318, 16);
-    //     SetLight2(500, 0x07);
-    // }
+
+
+    // while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));  // wait for button press
+
+    // // Display the time in milliseconds along with a random number.
+    // // We use the sprintf() function to put the formatted output into a buffer;
+    // // see https://www.tutorialspoint.com/c_standard_library/c_function_sprintf.htm for more
+    // // information about this function
+    // char buff[100];
+    // sprintf(buff, "Time: %lu ms   Random = %ld\r\n", HAL_GetTick(), random());
+    // // lu == "long unsigned", ld = "long decimal", where "long" is 32 bit and "decimal" implies signed
+    // SerialPuts(buff); // transmit the buffer to the host computer's serial monitor in VSCode/PlatformIO
+
+    // while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));  // wait for button to be released
+
+
+
     // while (true) {
     //     if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 0) {
     //             SetLight1(0x04);
@@ -79,38 +99,36 @@ int main(void)
     //     }
     // }
 
-    // Output Pattern
+
+
+
+
+    // Start of Pattern Output
     SetLight1(0x07);
 
     // A
     SetLight2(0x04);
-    PlaySound(880);
+    PlaySound(noteA);
 
     // C
     SetLight2(0x02);
-    PlaySound(1046);
+    PlaySound(noteC);
 
     // A
     SetLight2(0x04);
-    PlaySound(880);
+    PlaySound(noteA);
 
     // E
     SetLight2(0x01);
-    PlaySound(660);
+    PlaySound(noteE);
 
-    // End Output
+    // End of Pattern Output
     SetLight1(0x00);
     SetLight2(0x00);
 
-    // wait for the user to press a button
-    // wait for them to release the button
-    // srand(HAL_GetTick());
-    // while (1)
-    //     num = rand()
 
 
-    // Button1();
-    //The starter code for PWM can help you with this -- just set the duty cycle to be half the period, and set the period to produce a sound of the pitch you want.
+
 
 #ifdef BUTTON_BLINK
     // Wait for the user to push the blue button, then blink the LED.
