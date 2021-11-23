@@ -41,7 +41,7 @@ int main(void)
 
     InitializePin(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED output pins
     InitializePin(GPIOB, GPIO_PIN_6 | GPIO_PIN_10 | GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED output pins
-    InitializePin(GPIOA, GPIO_PIN_10, GPIO_MODE_INPUT, GPIO_PULLDOWN, 0);
+    InitializePin(GPIOA, GPIO_PIN_10, GPIO_MODE_INPUT, GPIO_PULLUP, 0);
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
     // is required, since there's one on the board)
 
@@ -52,10 +52,63 @@ int main(void)
 
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
+    // int notes[7]{};
+    // srand(time(NULL));
+    // for (int i = 0 ; i < 7 ; i++){
+    //     notes[i] = (int) (rand() % 4) + 1;
+    // }
 
-    SetLight1(500, 0x02);
-    SetLight2(500, 0x04);
-    PlaySound(2000, 1318, 16);
+    // SetLight1(500, 0x02);
+    // SetLight2(500, 0x04);
+    // // PlaySound(2000, 1318, 16);
+    // while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
+    // {
+    // }
+    // while (1) {
+    //     SetLight1(500, 0x01);
+    //     PlaySound(500, 1318, 16);
+    //     SetLight2(500, 0x07);
+    // }
+    // while (true) {
+    //     if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 0) {
+    //             SetLight1(0x04);
+    //             SetLight2(0x07);
+    //             PlaySound(618);
+    //             SetLight1(0x00);
+    //             SetLight2(0x00);
+    //     }
+    // }
+
+    // Output Pattern
+    SetLight1(0x07);
+
+    // A
+    SetLight2(0x04);
+    PlaySound(880);
+
+    // C
+    SetLight2(0x02);
+    PlaySound(1046);
+
+    // A
+    SetLight2(0x04);
+    PlaySound(880);
+
+    // E
+    SetLight2(0x01);
+    PlaySound(660);
+
+    // End Output
+    SetLight1(0x00);
+    SetLight2(0x00);
+
+    // wait for the user to press a button
+    // wait for them to release the button
+    // srand(HAL_GetTick());
+    // while (1)
+    //     num = rand()
+
+
     // Button1();
     //The starter code for PWM can help you with this -- just set the duty cycle to be half the period, and set the period to produce a sound of the pitch you want.
 
