@@ -324,7 +324,6 @@ void SetLight2 (int color) {
 
 // Play a sound from the buzzer
 void PlaySound (uint16_t period) {
-
     __TIM1_CLK_ENABLE();    // enable timer 2
     //instance1 is Pin A0: Timer 2, channel 1.
     TIM_HandleTypeDef pwmTimerInstance1;    // this variable stores an instance of the timer
@@ -408,4 +407,6 @@ void GameWon(int duration) {
         SetLight1(0x02);
         HAL_Delay(125);
     }
+    SetLight1(0x02);
+    SetLight2(0x02);
 }
