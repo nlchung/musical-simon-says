@@ -46,24 +46,24 @@ int main(void)
     SerialSetup(9600);
 
 
-
-
-
-
-
-    // BUTTON CODE: NOT WORKING
-
-    // InitializePin(GPIOA, GPIO_PIN_10, GPIO_MODE_INPUT, GPIO_PULLUP, 0); // button 1
-
+    // NOT WORKING
+    // BUTTON PRESS & OUTPUT
+ 
+    // InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_INPUT, GPIO_NOPULL, 0);  // pullup, 10k ohms
     // while (true) {
-    //     if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10) == 0) {
+    //     if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3) == 0) {                  // external button
+    //             SetLight1(0x01);
+    //             SetLight2(0x02);
+    //             SetLight1(0x00);
+    //             SetLight2(0x00);
+    //     }
+    //     if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 0) {                  // on-board blue button
     //             SetLight1(0x04);
     //             SetLight2(0x07);
     //             SetLight1(0x00);
     //             SetLight2(0x00);
     //     }
     // }
-
 
     // while (true) {
     //     if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 0) {
@@ -73,6 +73,7 @@ int main(void)
     //             SetLight2(0x00);
     //     }
     // }
+
 
 
 
@@ -98,12 +99,13 @@ int main(void)
     listOfNotes[6] = noteA;
 
     uint16_t level = 1;
-    while (level <= 7) {
+    while (level <= maxLevel) {
         // Start of Pattern Output
         SetLight1(0x07);
         for (uint16_t k = 0; k < level; k++) {
             if (listOfNotes[k] == noteA) {
                 SetLight2(0x04);
+                HAL_Delay(600);
                 PlaySound(noteA);
             }
             else if (listOfNotes[k] == noteC) {
@@ -132,8 +134,22 @@ int main(void)
                 if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 0) {
                     SetLight2(0x04);
                     PlaySound(noteA);
-                    SetLight2(0x00);
+                    HAL_Delay(600);
                     UserInput[m] = noteA;
+                    break;
+                }
+                else if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3) == 1) {
+                    SetLight2(0x02);
+                    PlaySound(noteC);
+                    SetLight2(0x00);
+                    UserInput[m] = noteC;
+                    break;
+                }
+                else if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5) == 1) {
+                    SetLight2(0x01);
+                    PlaySound(noteE);
+                    SetLight2(0x00);
+                    UserInput[m] = noteE;
                     break;
                 }
             }
@@ -143,11 +159,13 @@ int main(void)
         }
         if (levelPassed == true) {
             SerialPuts("Level passed!");
+            LevelWon();
             ++level;
         }
     }
-
-
+    if (level == (maxLevel + 1)) {
+        GameWon(6000);
+    }
 
 
 

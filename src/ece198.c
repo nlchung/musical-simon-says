@@ -353,3 +353,59 @@ void PlayNote (int duration, uint16_t period) {
     HAL_Delay(duration);
     SetPWMDutyCycle(&pwmTimerInstance1, TIM_CHANNEL_2, 0);
 }
+
+void LevelWon(){
+    for (uint16_t m = 0; m < 2; m++) {
+        SetLight1(0x02);
+        SetLight2(0x02);
+        HAL_Delay(200);
+        SetLight1(0x00);
+        SetLight2(0x00);
+        HAL_Delay(200);
+    }
+    HAL_Delay(500);
+}
+
+void LevelLost(){
+    for (uint16_t m = 0; m < 2; m++) {
+        SetLight1(0x04);
+        SetLight2(0x04);
+        HAL_Delay(200);
+        SetLight1(0x00);
+        SetLight2(0x00);
+        HAL_Delay(200);
+    }
+    HAL_Delay(500);
+}
+
+
+void GameWon(int duration) {
+    for (uint16_t m = 0; m < 3; m++) {
+        SetLight1(0x07);
+        SetLight2(0x07);
+        HAL_Delay(300);
+        SetLight1(0x00);
+        SetLight2(0x00);
+        HAL_Delay(300);
+    }
+    HAL_Delay(500);
+    int repeat = duration / 1000;
+    for (uint16_t k = 0; k < repeat; k++) {
+        SetLight2(0x02);
+        HAL_Delay(125);
+        SetLight1(0x04);
+        HAL_Delay(125);
+        SetLight2(0x04);
+        HAL_Delay(125);
+        SetLight1(0x02);
+        HAL_Delay(125);
+        SetLight2(0x02);
+        HAL_Delay(125);
+        SetLight1(0x04);
+        HAL_Delay(125);
+        SetLight2(0x04);
+        HAL_Delay(125);
+        SetLight1(0x02);
+        HAL_Delay(125);
+    }
+}
