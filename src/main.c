@@ -46,7 +46,6 @@ int main(void)
     // (anything we write to the serial port will appear in the terminal (i.e. serial monitor) in VSCode)
     SerialSetup(9600);
 
-
     // GAME CODE
 
     // define note frequencies
@@ -54,21 +53,46 @@ int main(void)
     int noteA = 880;
     int noteC = 1046;
     int noteE = 660;
-    int noteG = 1568;
 
     // set maximum level that must be attained to win the game
     uint16_t maxLevel = 7;
-    // initialize a list of the notes in the given pattern to match
-    int listOfNotes[maxLevel];
+    // // initialize a list of the notes in the given pattern to match
+    // int notesList[maxLevel];
 
-    // Hardcoded note pattern
-    listOfNotes[0] = noteA;
-    listOfNotes[1] = noteC;
-    listOfNotes[2] = noteA;
-    listOfNotes[3] = noteE;
-    listOfNotes[4] = noteA;
-    listOfNotes[5] = noteC;
-    listOfNotes[6] = noteE;
+    // // Hardcoded pattern
+    // notesList[0] = noteA;
+    // notesList[1] = noteC;
+    // notesList[2] = noteA;
+    // notesList[3] = noteE;
+    // notesList[4] = noteA;
+    // notesList[5] = noteC;
+    // notesList[6] = noteE;
+    
+    // Randomized Pattern Generation (Must have user press button 7 times)
+    int notesList[maxLevel];
+    int random;
+    int counter = 0;
+    while (counter < maxLevel) {
+        while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
+        srand(HAL_GetTick());
+        random = rand();
+        while(!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
+        
+        random = random % 3;
+        if (random == 0) {
+            SerialPutc('0');
+            notesList[counter] = noteA;
+        }
+        else if (random == 1) {
+            SerialPutc('1');
+            notesList[counter] = noteC;
+        }
+        else if (random == 2) {
+            SerialPutc('2');
+            notesList[counter] = noteE;
+        }
+        ++counter;
+    }
 
     // start the user at level 1
     uint16_t level = 1;
@@ -77,52 +101,52 @@ int main(void)
 
         // Start Pattern Output
 
-        // first LED holds white while the pattern plays
-        SetLight1(0x07);
-
         // for each index up to the current level
         for (uint16_t k = 0; k < level; k++) {
 
             // if the note in the pattern is an A
-            if (listOfNotes[k] == noteA) {
+            if (notesList[k] == noteA) {
 
                 // second LED goes RED
                 SetLight2(0x04);
 
                 // buzzer plays an A
                 PlaySound(noteA);
+                HAL_Delay(100);
             }
 
             // if the note in the pattern is a C
-            else if (listOfNotes[k] == noteC) {
+            else if (notesList[k] == noteC) {
                 
                 // second LED goes green
                 SetLight2(0x02);
 
                 // buzzer plays a C
                 PlaySound(noteC);
+                HAL_Delay(100);
             }
 
             // if the note in the pattern is an E
-            else if (listOfNotes[k] == noteE) {
+            else if (notesList[k] == noteE) {
 
                 // second LED goes blue
                 SetLight2(0x01);
 
                 // buzzer plays an E
                 PlaySound(noteE);
+                HAL_Delay(100);
             }
         }
-        // turn off both LEDs
-        SetLight1(0x00);
+        // turn off LED
         SetLight2(0x00);
-
 
         // new array to hold user input
         int UserInput[level];                   // number of indices == current level number
         bool levelPassed = true;                // bool to track if user passed the level
 
         // Start of User Input
+        // first LED holds white while waiting for user to input
+        SetLight1(0x07);
 
         // for each input (# of user inputs = current level #)
         for (uint16_t m = 0; m < level; m++) {
@@ -146,7 +170,7 @@ int main(void)
                     break;
                 }
 
-                // if user presses button 1
+                // if user presses button 2
                 else if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3) == 0) {
                     // second LED goes green
                     SetLight2(0x02);
@@ -174,12 +198,14 @@ int main(void)
             }
 
             // if the user input value does not match the intended value from the pattern
-            if (UserInput[m] != listOfNotes[m]) {
+            if (UserInput[m] != notesList[m]) {
 
                 // user has not passed the level
                 levelPassed = false;
             }
         }
+        // When user input time is over, turn the first LED off
+        SetLight1(0x00);
 
         // if the user has passed the level (none of the inputs were incorrect)
         if (levelPassed == true) {
@@ -189,7 +215,7 @@ int main(void)
             // increment level by 1
             ++level;
         }
-        
+
         // if the user has failed the level
         else {
             // execute level lost function
@@ -205,53 +231,6 @@ int main(void)
 
 
 
-
-
-    // RANDOMIZING LIST OF NOTES : NOT WORKING                               // print array ???????
-    // while (true) {
-    //     if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)){  // wait for button press
-    //         srand(HAL_GetTick());
-    //     }
-    // }
-    // int listOfNotes[maxLevel];
-    // int num = (int) (rand() % 3) + 1;
-    // SerialPutc(num);
-    // for (int i = 0 ; i < maxLevel; i++){
-    //     num *= HAL_GetTick();
-    //     num = (num % 3) + 1;
-    //     if (num == 1) {
-    //         listOfNotes[i] = noteA;
-    //     }
-    //     else if (num == 2) {
-    //         listOfNotes[i] = noteC;
-    //     }
-    //     else if (num == 3) {
-    //         listOfNotes[i] = noteE;
-    //     }
-    // }
-
-    // SerialPutc(listOfNotes[0]);
-
-
-
-
-
-
-
-    // ALTERNATIVE RANODMIZATION METHOD : ALSO NOT WORKING
-    // char buff[100];
-    // while (true) {
-    //     while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
-    //     sprintf(buff, "%lu", HAL_GetTick(), random());
-    //     SerialPuts(buff);
-    //     while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
-    //     break;
-    // }
-    // SerialPuts(buff);
-    // int num = buff - '0';
-    // num %= 3;
-    // char charNum = num + '0';
-    // SerialPuts(charNum);
 
 
 #ifdef BUTTON_BLINK

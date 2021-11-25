@@ -309,7 +309,6 @@ uint16_t ReadADC(ADC_HandleTypeDef* adc, uint32_t channel)  // channel might be 
 
 // Turn on first RGB LED
 void SetLight1 (int color) {
-    // bottom three bits indicate which of the three LEDs should be on (eight possible combinations)
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, color & 0x01);  // blue  (hex 1 == 0001 binary)
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, color & 0x02);  // green (hex 2 == 0010 binary)
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, color & 0x04);  // red   (hex 4 == 0100 binary)
@@ -322,10 +321,9 @@ void SetLight2 (int color) {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, color & 0x04);  // red   (hex 4 == 0100 binary)
 }
 
-// Play a sound from the buzzer
-void PlaySound (uint16_t period) {
+// Play a sound from the buzzer for 1 second
+void PlaySound (uint16_t period) {      // takes 2x the frequency of the note
     __TIM1_CLK_ENABLE();    // enable timer 2
-    //instance1 is Pin A0: Timer 2, channel 1.
     TIM_HandleTypeDef pwmTimerInstance1;    // this variable stores an instance of the timer
     InitializePWMTimer(&pwmTimerInstance1, TIM1, period, 16);   // initialize the timer instance
     InitializePWMChannel(&pwmTimerInstance1, TIM_CHANNEL_2);            // initialize one channel (can use others for motors, etc)
@@ -337,11 +335,9 @@ void PlaySound (uint16_t period) {
     SetPWMDutyCycle(&pwmTimerInstance1, TIM_CHANNEL_2, 0);
 }
 
-
-void PlayNote (int duration, uint16_t period) {
-
+// Play a sound from the buzzer for a specific duration
+void PlayNote (int duration, uint16_t period) {           // takes time, and 2x the frequency of the note
     __TIM1_CLK_ENABLE();    // enable timer 2
-    //instance1 is Pin A0: Timer 2, channel 1.
     TIM_HandleTypeDef pwmTimerInstance1;    // this variable stores an instance of the timer
     InitializePWMTimer(&pwmTimerInstance1, TIM1, period, 16);   // initialize the timer instance
     InitializePWMChannel(&pwmTimerInstance1, TIM_CHANNEL_2);            // initialize one channel (can use others for motors, etc)
@@ -353,30 +349,32 @@ void PlayNote (int duration, uint16_t period) {
     SetPWMDutyCycle(&pwmTimerInstance1, TIM_CHANNEL_2, 0);
 }
 
+// Flash green lights 3x if level has been won
 void LevelWon(){
-    for (uint16_t m = 0; m < 2; m++) {
+    for (uint16_t m = 0; m < 3; m++) {
         SetLight1(0x02);
         SetLight2(0x02);
-        HAL_Delay(200);
+        PlayNote(200, 784);
         SetLight1(0x00);
         SetLight2(0x00);
-        HAL_Delay(200);
+        HAL_Delay(100);
     }
+    // Wait five seconds before resuming to next level
     HAL_Delay(500);
 }
+
 
 void LevelLost(){
-    for (uint16_t m = 0; m < 2; m++) {
+    for (uint16_t m = 0; m < 3; m++) {
         SetLight1(0x04);
         SetLight2(0x04);
-        HAL_Delay(200);
+        PlayNote(200, 1564);
         SetLight1(0x00);
         SetLight2(0x00);
-        HAL_Delay(200);
+        HAL_Delay(100);
     }
     HAL_Delay(500);
 }
-
 
 void GameWon(int duration) {
     for (uint16_t m = 0; m < 3; m++) {
