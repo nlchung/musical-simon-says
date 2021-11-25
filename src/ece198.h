@@ -39,4 +39,4 @@ void PlaySound (uint16_t period);
 void PlayNote (int duration, uint16_t period);
 void LevelWon();
 void LevelLost();
-void GameWon(int duration);
+void GameWon();

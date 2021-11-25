@@ -22,15 +22,12 @@ int main(void)
     InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_INPUT, GPIO_PULLUP, 0); // button 3
 
     SerialSetup(9600); // set up serial
-
     // GAME CODE
-
     // DEFINE note frequencies
     // 2x frequency of note (AKA period for PWM)
     int noteA = 880;
     int noteC = 1046;
     int noteE = 660;
-
     // set maximum level that must be attained to win the game
     uint16_t maxLevel = 7;
     
@@ -210,7 +207,7 @@ int main(void)
     // once level has incremented past max level, game is won
     if (level == (maxLevel + 1)) {
         // execute game won function
-        GameWon(6000);
+        GameWon();
     }
 
     return 0;
@@ -298,35 +295,120 @@ void LevelLost(){
 
 // Flash white lights 3x if game has been won
 // Play a nice tune and flash red and green lights
-void GameWon(int duration) {
+void GameWon() {
+    // Flash Lights
     for (uint16_t m = 0; m < 3; m++) {
         SetLight1(0x07);
         SetLight2(0x07);
-        HAL_Delay(300);
+        PlayNote(100, 880); // D  
         SetLight1(0x00);
         SetLight2(0x00);
-        HAL_Delay(300);
+        HAL_Delay(100);
     }
-    HAL_Delay(500);
-    int repeat = duration / 1000;
-    for (uint16_t k = 0; k < repeat; k++) {
-        SetLight2(0x02);
-        HAL_Delay(125);
-        SetLight1(0x04);
-        HAL_Delay(125);
-        SetLight2(0x04);
-        HAL_Delay(125);
-        SetLight1(0x02);
-        HAL_Delay(125);
-        SetLight2(0x02);
-        HAL_Delay(125);
-        SetLight1(0x04);
-        HAL_Delay(125);
-        SetLight2(0x04);
-        HAL_Delay(125);
-        SetLight1(0x02);
-        HAL_Delay(125);
-    }
-    SetLight1(0x02);
+    HAL_Delay(200);
+
+    // D G G A G F# E E
+    // E A A B A G F# D
+    // D B B C B A G E
+    // D D E A F# G
+
+    // Hardcoded Song
+    // "We Wish You a Merry Christmas"
     SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(300, 3120); // D
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(300, 2350); // G
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(150, 2350); // G
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(150, 2093); // A
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(150, 2350); // G
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(150, 2450); // F#
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(300, 2840); // E
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(300, 2840); // E
+
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(300, 2840); // E
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(300, 2093); // A
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(150, 2093); // A
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(150, 1865); // B
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(150, 2093); // A
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(150, 2350); // G
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(300, 2450); // F#
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(300, 3120); // D
+
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(300, 3120); // D
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(300, 1865); // B
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(150, 1865); // B
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(150, 1800); // C
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(150, 1865); // B
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(150, 2093); // A
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(300, 2350); // G
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(300, 2840); // E
+
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(150, 3120); // D
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(150, 3120); // D
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(300, 2840); // E
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(300, 2093); // A
+    SetLight2(0x02);
+    SetLight1(0x04);
+    PlayNote(300, 2450); // F#
+    SetLight2(0x04);
+    SetLight1(0x02);
+    PlayNote(500, 2350); // G
+
+    SetLight2(0x02);
+    SetLight1(0x02);
+
 }
