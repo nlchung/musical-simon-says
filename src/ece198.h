@@ -32,7 +32,7 @@ void Display7Segment(int digit);
 void InitializeADC(ADC_HandleTypeDef* adc, ADC_TypeDef* whichAdc);
 uint16_t ReadADC(ADC_HandleTypeDef* adc, uint32_t channel);
 
-
+// Declare functions
 void SetLight1 (int color);
 void SetLight2 (int color);
 void PlaySound (uint16_t period);

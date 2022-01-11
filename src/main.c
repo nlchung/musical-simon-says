@@ -1,6 +1,4 @@
 // ECE198 Project: Musical "Simon Says"
-// N. Chung and Komal Vachhani
-// November 25, 2021
 
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
@@ -15,6 +13,7 @@ int main(void)
     __HAL_RCC_GPIOA_CLK_ENABLE(); // enable port A (for the on-board LED, for example)
     __HAL_RCC_GPIOB_CLK_ENABLE(); // enable port B (for the rotary encoder inputs, for example)
     __HAL_RCC_GPIOC_CLK_ENABLE(); // enable port C (for the on-board blue pushbutton, for example)
+
     InitializePin(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED 1
     InitializePin(GPIOB, GPIO_PIN_6 | GPIO_PIN_10 | GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED 2
     InitializePin(GPIOA, GPIO_PIN_10, GPIO_MODE_INPUT, GPIO_PULLUP, 0); // button 1
@@ -22,6 +21,7 @@ int main(void)
     InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_INPUT, GPIO_PULLUP, 0); // button 3
 
     SerialSetup(9600); // set up serial
+    
     // GAME CODE
     // DEFINE note frequencies
     // 2x frequency of note (AKA period for PWM)
